@@ -8,7 +8,7 @@ public class Movement : MonoBehaviour
     [SerializeField] float speed, rotationSpeed;
     Transform tf;
 
-    private const float MAX_X_ROTATION = 20f;
+    private const float MAX_X_ROTATION = 25f;
     private void Start()
     {
         tf = this.GetComponent<Transform>();
@@ -40,13 +40,13 @@ public class Movement : MonoBehaviour
         // Rotation
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            tf.eulerAngles = new Vector3(ClampAngle(tf.eulerAngles.x - rotationSpeed, -20f, 20f), tf.rotation.eulerAngles.y, tf.rotation.eulerAngles.z);
+            tf.eulerAngles = new Vector3(ClampAngle(tf.eulerAngles.x - rotationSpeed, -MAX_X_ROTATION, MAX_X_ROTATION), tf.rotation.eulerAngles.y, tf.rotation.eulerAngles.z);
 
         }
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            tf.eulerAngles = new Vector3(ClampAngle(tf.eulerAngles.x + rotationSpeed, -20f, 20f), tf.rotation.eulerAngles.y, tf.rotation.eulerAngles.z);
+            tf.eulerAngles = new Vector3(ClampAngle(tf.eulerAngles.x + rotationSpeed, -MAX_X_ROTATION, MAX_X_ROTATION), tf.rotation.eulerAngles.y, tf.rotation.eulerAngles.z);
         }
 
         if (Input.GetKey(KeyCode.LeftArrow))
@@ -58,6 +58,8 @@ public class Movement : MonoBehaviour
         {
             tf.Rotate(new Vector3(0, rotationSpeed, 0));
         }
+
+        tf.eulerAngles = new Vector3(tf.eulerAngles.x, tf.eulerAngles.y, 0f);
 
     }
 
