@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PenInput : MonoBehaviour
 {
+    public bool displayName = false;
     private void Start()
     {
     }
@@ -24,6 +25,10 @@ public class PenInput : MonoBehaviour
             Debug.Log(pos);
         }
 
-        Debug.Log(Pen.current.displayName);
+
+        if (displayName)
+        {
+            Debug.Log(Pen.current.displayName);
+        }
     }
 }
