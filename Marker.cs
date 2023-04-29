@@ -12,6 +12,7 @@ public class Marker : MonoBehaviour
 {
     [SerializeField] private int _penSize = 5;
     [SerializeField] private Color _color;
+    [SerializeField] bool _acceptMouseInput = false;
 
 
     private Color[] _colors;
@@ -21,6 +22,7 @@ public class Marker : MonoBehaviour
     private bool _touchedLastFrame;
     private Quaternion _lastTouchRot;
     private Plane _plane = new Plane(Vector3.up, 0);
+
     void Start()
     {
         //_renderer = _tip.GetComponent<Renderer>();
@@ -59,10 +61,15 @@ public class Marker : MonoBehaviour
     {
         Vector3 pos = new Vector3(0, 0, 0);
         Vector3 worldPos = new Vector3(0, 0, 0);
-        if (Pen.current.tip.isPressed)
+        if (Pen.current.tip.isPressed || (_acceptMouseInput && Pointer.current.press.isPressed))
         {
+            Debug.Log("e");
             RaycastHit hitData;
             pos = Pen.current.position.ReadValue();
+            if(_acceptMouseInput)
+            {
+                pos = Pointer.current.position.ReadValue();
+            }
             pos.z = 1;
             var ray = Camera.main.ScreenPointToRay(pos);
             if (Physics.Raycast(ray, out hitData, 1000))

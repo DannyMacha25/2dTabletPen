@@ -8,6 +8,19 @@ public class Movement : MonoBehaviour
     [SerializeField] float speed, rotationSpeed;
     Transform tf;
 
+    // Modular Controls
+    KeyCode left = KeyCode.A;
+    KeyCode back = KeyCode.S;
+    KeyCode forward = KeyCode.W;
+    KeyCode right = KeyCode.D;
+
+    KeyCode rotLeft = KeyCode.LeftArrow;
+    KeyCode rotRight = KeyCode.RightArrow;
+    KeyCode panUp = KeyCode.UpArrow;
+    KeyCode panDown = KeyCode.DownArrow;
+
+    KeyCode ascend = KeyCode.Space;
+    KeyCode descend = KeyCode.LeftShift;
     private const float MAX_X_ROTATION = 25f;
     private void Start()
     {
@@ -17,49 +30,61 @@ public class Movement : MonoBehaviour
     {
         // NOTE: Current movement is frame based, might become a problem?
         // Movement
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(forward))
         {
             tf.position += tf.forward * speed;
         }
 
-        if(Input.GetKey(KeyCode.S))
+        if(Input.GetKey(back))
         {
             tf.position -= tf.forward * speed;
         }
 
-        if(Input.GetKey(KeyCode.D))
+        if(Input.GetKey(right))
         {
             tf.position += tf.right * speed;
         }
 
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(left))
         {
             tf.position -= tf.right * speed;
         }
 
         // Rotation
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(panUp))
         {
             tf.eulerAngles = new Vector3(ClampAngle(tf.eulerAngles.x - rotationSpeed, -MAX_X_ROTATION, MAX_X_ROTATION), tf.rotation.eulerAngles.y, tf.rotation.eulerAngles.z);
 
         }
 
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(panDown))
         {
             tf.eulerAngles = new Vector3(ClampAngle(tf.eulerAngles.x + rotationSpeed, -MAX_X_ROTATION, MAX_X_ROTATION), tf.rotation.eulerAngles.y, tf.rotation.eulerAngles.z);
         }
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(rotLeft))
         {
             tf.Rotate(new Vector3(0, -rotationSpeed, 0));
         }
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(rotRight))
         {
             tf.Rotate(new Vector3(0, rotationSpeed, 0));
         }
 
         tf.eulerAngles = new Vector3(tf.eulerAngles.x, tf.eulerAngles.y, 0f);
+
+        // Height
+
+        if(Input.GetKey(ascend))
+        {
+            tf.position += tf.up * speed;
+        }
+
+        if(Input.GetKey(descend))
+        {
+            tf.position -= tf.up * speed;
+        }
 
     }
 
