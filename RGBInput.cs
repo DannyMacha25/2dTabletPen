@@ -15,7 +15,6 @@ public class RGBInput : MonoBehaviour
     void Update()
     {
         color = new Color(r/255, g/255, b/255, 1);
-        Debug.Log(r + " " + g + " " + b);
         panel.GetComponent<UnityEngine.UI.Image>().color = color;
     }
 
