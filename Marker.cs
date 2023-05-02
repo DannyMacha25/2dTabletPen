@@ -23,6 +23,11 @@ public class Marker : MonoBehaviour
     [SerializeField] private RGBInput _colorInput;
     [SerializeField] bool _acceptMouseInput = false;
 
+    // Be sure the panels are in order of PEN, ERASER, COLOR PICKER
+    [SerializeField] GameObject[] _toolPanels;
+    private Color _toolSelectedColor = new Color(248 / 255f, 1f, 117 / 255f, 1f);
+    private Color _toolUnSelectedColor = new Color(1f, 1f, 1f, 1f);
+
 
     private Color[] _colors;
     private RaycastHit _touch;
@@ -56,15 +61,20 @@ public class Marker : MonoBehaviour
             ChangePenSize(1);
         }
 
-        // Change Tool
+        // Change Tool NOTE: Add mouse interaction with UI in future
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
         {
-            _currentTool = Tool.Pen;
+            ChangeTool(Tool.Pen);
         }
 
         if (Keyboard.current.digit2Key.wasPressedThisFrame)
         {
-            _currentTool = Tool.Eraser;
+            ChangeTool(Tool.Eraser);
+        }
+
+        if (Keyboard.current.digit3Key.wasPressedThisFrame)
+        {
+            ChangeTool(Tool.ColorPicker);
         }
         //var worldPos = Camera.main.ScreenToWorldPoint(pos);
         switch(_currentTool)
@@ -88,6 +98,28 @@ public class Marker : MonoBehaviour
         _colors = Enumerable.Repeat(_color, _penSize * _penSize).ToArray();
 
         Debug.Log(_penSize);
+    }
+    private void ChangeTool(Tool t)
+    {
+        _currentTool = t;
+        switch(t)
+        {
+            case Tool.Pen:
+                _toolPanels[0].GetComponent<UnityEngine.UI.Image>().color = _toolSelectedColor;
+                _toolPanels[1].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
+                _toolPanels[2].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
+                break;
+            case Tool.Eraser:
+                _toolPanels[0].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
+                _toolPanels[1].GetComponent<UnityEngine.UI.Image>().color = _toolSelectedColor;
+                _toolPanels[2].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
+                break;
+            case Tool.ColorPicker:
+                _toolPanels[0].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
+                _toolPanels[1].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
+                _toolPanels[2].GetComponent<UnityEngine.UI.Image>().color = _toolSelectedColor;
+                break;
+        }
     }
     private void Draw()
     {
