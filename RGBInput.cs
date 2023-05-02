@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class RGBInput : MonoBehaviour
 {
 
-    public Color color;
+    private Color color;
     [SerializeField] GameObject panel;
     [SerializeField] Image p;
     private float r, g, b;
@@ -14,7 +14,7 @@ public class RGBInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        color = new Color(r, g, b, 255);
+        color = new Color(r/255, g/255, b/255, 1);
         Debug.Log(r + " " + g + " " + b);
         panel.GetComponent<UnityEngine.UI.Image>().color = color;
     }
@@ -32,5 +32,10 @@ public class RGBInput : MonoBehaviour
     public void UpdateB(float f)
     {
         b = f;
+    }
+
+    public Color Color()
+    {
+        return color;
     }
 }

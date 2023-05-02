@@ -12,6 +12,7 @@ public class Marker : MonoBehaviour
 {
     [SerializeField] private int _penSize = 5;
     [SerializeField] private Color _color;
+    [SerializeField] private RGBInput _colorInput;
     [SerializeField] bool _acceptMouseInput = false;
 
 
@@ -33,8 +34,7 @@ public class Marker : MonoBehaviour
     void Update()
     {
         Vector3 pos = new Vector3(0, 0, 0);
-
-
+        ChangeColor(_colorInput.Color());
 
         // Pen size
         if (Keyboard.current.leftBracketKey.wasPressedThisFrame)
@@ -50,6 +50,11 @@ public class Marker : MonoBehaviour
         Draw();
     }
 
+    private void ChangeColor(Color c)
+    {
+        _color = c;
+        _colors = Enumerable.Repeat(_color, _penSize * _penSize).ToArray();
+    }
     private void ChangePenSize (int change)
     {
         _penSize += change;
