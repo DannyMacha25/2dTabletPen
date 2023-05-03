@@ -5,9 +5,11 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TMPro;
 
 public class Marker : MonoBehaviour
 {
@@ -22,7 +24,7 @@ public class Marker : MonoBehaviour
     [SerializeField] private Color _color;
     [SerializeField] private RGBInput _colorInput;
     [SerializeField] bool _acceptMouseInput = false;
-
+    [SerializeField] TextMeshProUGUI _sizeText;
     // Be sure the panels are in order of PEN, ERASER, COLOR PICKER
     [SerializeField] GameObject[] _toolPanels;
     private Color _toolSelectedColor = new Color(248 / 255f, 1f, 117 / 255f, 1f);
@@ -41,7 +43,9 @@ public class Marker : MonoBehaviour
     void Start()
     {
         //_renderer = _tip.GetComponent<Renderer>();
+
         _colors = Enumerable.Repeat(_color, _penSize * _penSize).ToArray();
+        _sizeText.text = _penSize.ToString();
     }
 
 
@@ -84,6 +88,8 @@ public class Marker : MonoBehaviour
 
             case Tool.Eraser:
                 Erase(); break;
+            case Tool.ColorPicker:
+                PickColor(); break;
         }
     }
 
@@ -97,7 +103,7 @@ public class Marker : MonoBehaviour
         _penSize += change;
         _colors = Enumerable.Repeat(_color, _penSize * _penSize).ToArray();
 
-        Debug.Log(_penSize);
+        _sizeText.text = _penSize.ToString();
     }
     private void ChangeTool(Tool t)
     {
@@ -273,6 +279,54 @@ public class Marker : MonoBehaviour
         _touchedLastFrame = false;
     }
 
+    private void PickColor()
+    {
+        Vector3 pos = new Vector3(0, 0, 0);
+        Vector3 worldPos = new Vector3(0, 0, 0);
+        if (Pen.current.tip.isPressed || (_acceptMouseInput && Pointer.current.press.isPressed))
+        {
+            RaycastHit hitData;
+            pos = Pen.current.position.ReadValue();
+            if (_acceptMouseInput)
+            {
+                pos = Pointer.current.position.ReadValue();
+            }
+            pos.z = 1;
+            var ray = Camera.main.ScreenPointToRay(pos);
+            if (Physics.Raycast(ray, out hitData, 1000))
+            {
+                worldPos = hitData.point;
+            }
+
+        }
+        if (worldPos != Vector3.zero)
+        {
+            worldPos.z -= .1f;
+            Debug.DrawRay(worldPos, Vector3.forward, Color.green, 100f);
+        }
+
+        if (Physics.Raycast(worldPos, Vector3.forward, out _touch, 10f) && worldPos != Vector3.zero)
+        {
+            if (_touch.transform.CompareTag("Whiteboard"))
+            {
+                Whiteboard wb = _touch.transform.GetComponent<Whiteboard>();
+                _touchPos = new Vector2(_touch.textureCoord.x, _touch.textureCoord.y);
+
+                var x = (int)(_touchPos.x * wb.textureSize.x - (_penSize / 2));
+                var y = (int)(_touchPos.y * wb.textureSize.y - (_penSize / 2));
+
+                if (y < 0 || y > wb.textureSize.y || x < 0 || x > wb.textureSize.x)
+                {
+                    return;
+                }
+
+                var color = wb.texture.GetPixel(x, y);
+
+                ChangeColor(color);
+                _colorInput.UpdateColor(color);
+            }
+        }
+    }
     private class BrushStroke
     {
         public int _x { get; set; }

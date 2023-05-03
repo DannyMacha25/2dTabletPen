@@ -7,7 +7,7 @@ public class RGBInput : MonoBehaviour
 {
 
     private Color color;
-    [SerializeField] GameObject panel;
+    [SerializeField] GameObject panel, rSlider, gSlider, bSlider;
     [SerializeField] Image p;
     private float r, g, b;
 
@@ -31,6 +31,20 @@ public class RGBInput : MonoBehaviour
     public void UpdateB(float f)
     {
         b = f;
+    }
+
+    public void UpdateColor(float fR, float fG, float fB)
+    {
+        r = fR * 255; g = fG * 255; b = fB * 255;
+        rSlider.GetComponent<UnityEngine.UI.Slider>().value = r;
+        gSlider.GetComponent<UnityEngine.UI.Slider>().value = g;
+        bSlider.GetComponent<UnityEngine.UI.Slider>().value = b;
+    }
+
+    public void UpdateColor(Color c)
+    {
+        UpdateColor(c.r, c.g, c.b);
+
     }
 
     public Color Color()
