@@ -327,22 +327,24 @@ public class Marker : MonoBehaviour
             }
         }
     }
-    private class BrushStroke
+    public void Test()
     {
-        public int _x { get; set; }
-        public int _y { get; set; }
-        public int _size { get; set; }
-        public Color[] _colors { get; set; }
-        public Whiteboard _whiteboard { get; set; }
+        Debug.Log("Test");
+    }
+    
+    public void ChangeToPen()
+    {
+        ChangeTool(Tool.Pen);
+    }
 
-        public BrushStroke(int x, int y, int size, Color[] c, Whiteboard whiteboard)
-        {
-            _x = x;
-            _y = y;
-            _size = size;
-            _colors = c;
-            _whiteboard = whiteboard;
-        }
+    public void ChangeToEraser()
+    {
+        ChangeTool(Tool.Eraser);
+    }
+
+    public void ChangeToColorPicker()
+    {
+        ChangeTool(Tool.ColorPicker);
     }
 }
 
