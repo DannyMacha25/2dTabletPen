@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TMPro;
+using System;
 
 public class Marker : MonoBehaviour
 {
@@ -127,6 +128,7 @@ public class Marker : MonoBehaviour
                 break;
         }
     }
+    // Pen
     private void Draw()
     {
         Vector3 pos = new Vector3(0, 0, 0);
@@ -175,20 +177,19 @@ public class Marker : MonoBehaviour
 
                 if (_touchedLastFrame)
                 {
-                    _whiteboard.texture.SetPixels(x, y, _penSize, _penSize, _colors);
-
+                    _whiteboard.drawTexture.SetPixels(x, y, _penSize, _penSize, _colors);
                     for (float f = 0.01f; f < 1.00f; f += 0.01f)
                     {
                         var lerpX = (int)Mathf.Lerp(_lastTouchPos.x, x, f);
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
 
                         // Set pixels
-                        _whiteboard.texture.SetPixels(lerpX, lerpY, _penSize, _penSize, _colors);
+                        _whiteboard.drawTexture.SetPixels(lerpX, lerpY, _penSize, _penSize, _colors);
                     }
 
                     //transform.rotation = _lastTouchRot;
 
-                    _whiteboard.texture.Apply();
+                    _whiteboard.drawTexture.Apply();
                 }
 
                 _lastTouchPos = new Vector2(x, y);
@@ -202,6 +203,7 @@ public class Marker : MonoBehaviour
         _touchedLastFrame = false;
     }
 
+    // Eraser
     private void Erase()
     {
         Vector3 pos = new Vector3(0, 0, 0);
@@ -250,8 +252,9 @@ public class Marker : MonoBehaviour
 
                 if (_touchedLastFrame)
                 {
-                    var originalColors = _whiteboard.originalTexture.GetPixels(x, y, _penSize, _penSize);
-                    _whiteboard.texture.SetPixels(x, y, _penSize, _penSize, originalColors);
+                    Color[] blankColors = new Color[_penSize * _penSize];
+                    Array.Fill<Color>(blankColors, new Color(0, 0, 0, 0));
+                    _whiteboard.drawTexture.SetPixels(x, y, _penSize, _penSize, blankColors);
 
                     for (float f = 0.01f; f < 1.00f; f += 0.01f)
                     {
@@ -259,13 +262,12 @@ public class Marker : MonoBehaviour
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
 
                         // Set pixels
-                        originalColors = _whiteboard.originalTexture.GetPixels(lerpX, lerpY, _penSize, _penSize);
-                        _whiteboard.texture.SetPixels(lerpX, lerpY, _penSize, _penSize, originalColors);
+                        _whiteboard.drawTexture.SetPixels(lerpX, lerpY, _penSize, _penSize, blankColors);
                     }
 
                     //transform.rotation = _lastTouchRot;
 
-                    _whiteboard.texture.Apply();
+                    _whiteboard.drawTexture.Apply();
                 }
 
                 _lastTouchPos = new Vector2(x, y);
@@ -279,6 +281,7 @@ public class Marker : MonoBehaviour
         _touchedLastFrame = false;
     }
 
+    // Color Picker
     private void PickColor()
     {
         Vector3 pos = new Vector3(0, 0, 0);
@@ -320,18 +323,17 @@ public class Marker : MonoBehaviour
                     return;
                 }
 
-                var color = wb.texture.GetPixel(x, y);
+                var color = wb.drawTexture.GetPixel(x, y);
 
                 ChangeColor(color);
                 _colorInput.UpdateColor(color);
             }
         }
     }
-    public void Test()
-    {
-        Debug.Log("Test");
-    }
-    
+
+    /**
+     * Functions for the RGB sliders
+     */
     public void ChangeToPen()
     {
         ChangeTool(Tool.Pen);
