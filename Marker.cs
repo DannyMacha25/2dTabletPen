@@ -40,6 +40,8 @@ public class Marker : MonoBehaviour
     private Quaternion _lastTouchRot;
     private Plane _plane = new Plane(Vector3.up, 0);
 
+    private int _eraserSize = 5;
+
     private Tool _currentTool = Tool.Pen;
     void Start()
     {
@@ -101,10 +103,25 @@ public class Marker : MonoBehaviour
     }
     private void ChangePenSize(int change)
     {
-        _penSize += change;
-        _colors = Enumerable.Repeat(_color, _penSize * _penSize).ToArray();
+        switch(_currentTool)
+        {
+            case Tool.Pen:
+                _penSize += change;
+                _colors = Enumerable.Repeat(_color, _penSize * _penSize).ToArray();
 
-        _sizeText.text = _penSize.ToString();
+                if (_penSize < 1) { _penSize = 1; }
+
+                _sizeText.text = _penSize.ToString();
+                break;
+            case Tool.Eraser:
+                _eraserSize += change;
+                _colors = Enumerable.Repeat(_color, _eraserSize * _eraserSize).ToArray();
+
+                if (_eraserSize < 1) { _eraserSize = 1; }
+
+                _sizeText.text = _eraserSize.ToString();
+                break;
+        }
     }
     private void ChangeTool(Tool t)
     {
@@ -115,16 +132,19 @@ public class Marker : MonoBehaviour
                 _toolPanels[0].GetComponent<UnityEngine.UI.Image>().color = _toolSelectedColor;
                 _toolPanels[1].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
                 _toolPanels[2].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
+                _sizeText.text = _penSize.ToString();
                 break;
             case Tool.Eraser:
                 _toolPanels[0].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
                 _toolPanels[1].GetComponent<UnityEngine.UI.Image>().color = _toolSelectedColor;
                 _toolPanels[2].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
+                _sizeText.text = _eraserSize.ToString();
                 break;
             case Tool.ColorPicker:
                 _toolPanels[0].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
                 _toolPanels[1].GetComponent<UnityEngine.UI.Image>().color = _toolUnSelectedColor;
                 _toolPanels[2].GetComponent<UnityEngine.UI.Image>().color = _toolSelectedColor;
+                _sizeText.text = " ";
                 break;
         }
     }
@@ -242,8 +262,8 @@ public class Marker : MonoBehaviour
 
                 _touchPos = new Vector2(_touch.textureCoord.x, _touch.textureCoord.y);
 
-                var x = (int)(_touchPos.x * _whiteboard.textureSize.x - (_penSize / 2));
-                var y = (int)(_touchPos.y * _whiteboard.textureSize.y - (_penSize / 2));
+                var x = (int)(_touchPos.x * _whiteboard.textureSize.x - (_eraserSize / 2));
+                var y = (int)(_touchPos.y * _whiteboard.textureSize.y - (_eraserSize / 2));
 
                 if (y < 0 || y > _whiteboard.textureSize.y || x < 0 || x > _whiteboard.textureSize.x)
                 {
@@ -252,9 +272,9 @@ public class Marker : MonoBehaviour
 
                 if (_touchedLastFrame)
                 {
-                    Color[] blankColors = new Color[_penSize * _penSize];
+                    Color[] blankColors = new Color[_eraserSize * _eraserSize];
                     Array.Fill<Color>(blankColors, new Color(0, 0, 0, 0));
-                    _whiteboard.drawTexture.SetPixels(x, y, _penSize, _penSize, blankColors);
+                    _whiteboard.drawTexture.SetPixels(x, y, _eraserSize, _eraserSize, blankColors);
 
                     for (float f = 0.01f; f < 1.00f; f += 0.01f)
                     {
@@ -262,7 +282,7 @@ public class Marker : MonoBehaviour
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
 
                         // Set pixels
-                        _whiteboard.drawTexture.SetPixels(lerpX, lerpY, _penSize, _penSize, blankColors);
+                        _whiteboard.drawTexture.SetPixels(lerpX, lerpY, _eraserSize, _eraserSize, blankColors);
                     }
 
                     //transform.rotation = _lastTouchRot;

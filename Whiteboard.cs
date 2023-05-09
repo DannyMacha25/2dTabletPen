@@ -16,23 +16,22 @@ public class Whiteboard : MonoBehaviour
     {
         // NOTE: When introducing custom textures, may have to set the texture to the already applied texture
         var r = GetComponent<Renderer>();
+        texture = r.material.mainTexture as Texture2D;
         if (texture == null)
         {
             texture = new Texture2D((int)textureSize.x, (int)textureSize.y);
         }
+
         drawTexture = new Texture2D((int)textureSize.x, (int)textureSize.y); // Again may need to modify this for other textures
+        Color[] transparentPixels = new Color[drawTexture.width * drawTexture.height];
 
-        // Make draw texture all blank
-        for (int y = 0; y < drawTexture.height; y++)
+        for (int i = 0; i < transparentPixels.Length; i++)
         {
-            for (int x = 0; x < drawTexture.width; x++)
-            {
-
-                drawTexture.SetPixel(x, y, new Color(0,0,0,0));
-
-            }
+            transparentPixels[i] = Color.clear;
         }
+        
 
+        drawTexture.SetPixels(transparentPixels);
         drawTexture.Apply();
 
         // Set textures and materials
