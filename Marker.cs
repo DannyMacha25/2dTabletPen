@@ -92,15 +92,18 @@ public class Marker : MonoBehaviour
         {
             Undo();
         }
-        switch(_currentTool)
+        if (!Keyboard.current.leftCtrlKey.isPressed)
         {
-            case Tool.Pen:
-                Draw();  break;
+            switch (_currentTool)
+            {
+                case Tool.Pen:
+                    Draw(); break;
 
-            case Tool.Eraser:
-                Erase(); break;
-            case Tool.ColorPicker:
-                PickColor(); break;
+                case Tool.Eraser:
+                    Erase(); break;
+                case Tool.ColorPicker:
+                    PickColor(); break;
+            }
         }
     }
 

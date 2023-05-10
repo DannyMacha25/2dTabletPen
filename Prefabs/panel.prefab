@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4252510003876255669}
   - component: {fileID: 10781837212509071}
   - component: {fileID: 6485117020042925535}
+  - component: {fileID: 5389979746742912805}
   m_Layer: 0
   m_Name: panel
   m_TagString: Whiteboard
@@ -123,3 +124,16 @@ MonoBehaviour:
   drawTexture: {fileID: 0}
   transparentMaterial: {fileID: 2100000, guid: 8e5d59f29f264c44f897269e1bd4901f, type: 2}
   textureSize: {x: 2048, y: 2048}
+--- !u!114 &5389979746742912805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6504443954416792279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6513690b6a4aeb642930ebba972a1515, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activationKey: 306

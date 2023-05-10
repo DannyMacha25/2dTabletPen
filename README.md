@@ -21,3 +21,7 @@ on the object. Then place the *Whiteboard* tag on the object. The object is now 
 - left/right Brackets to change tool size.
 - 1/2/3 or clicking on the tools will change your current tool.
 - Mouse/Pen touch to draw on a surface.
+- U to undo
+
+## Panels
+Drawable panels can be spawned with the f key. Once a panel is spawned, holding the left control allows you to drag the panel.
