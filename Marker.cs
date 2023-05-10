@@ -21,6 +21,7 @@ public class Marker : MonoBehaviour
         ColorPicker
     }
 
+    // Public editables
     [SerializeField] private int _penSize = 5;
     [SerializeField] private Color _color;
     [SerializeField] private RGBInput _colorInput;
@@ -28,10 +29,12 @@ public class Marker : MonoBehaviour
     [SerializeField] TextMeshProUGUI _sizeText;
     // Be sure the panels are in order of PEN, ERASER, COLOR PICKER
     [SerializeField] GameObject[] _toolPanels;
+
+    // Colors for UI
     private Color _toolSelectedColor = new Color(248 / 255f, 1f, 117 / 255f, 1f);
     private Color _toolUnSelectedColor = new Color(1f, 1f, 1f, 1f);
 
-
+    // Private Fields
     private Color[] _colors;
     private RaycastHit _touch;
     private Whiteboard _whiteboard;
@@ -41,8 +44,10 @@ public class Marker : MonoBehaviour
     private Plane _plane = new Plane(Vector3.up, 0);
 
     private int _eraserSize = 5;
-
     private Tool _currentTool = Tool.Pen;
+
+    // Undo specific fields
+    private CappedStack<WhiteboardState> _wbStateStack = new CappedStack<WhiteboardState>(10);
     void Start()
     {
         //_renderer = _tip.GetComponent<Renderer>();
@@ -83,7 +88,10 @@ public class Marker : MonoBehaviour
         {
             ChangeTool(Tool.ColorPicker);
         }
-        //var worldPos = Camera.main.ScreenToWorldPoint(pos);
+        if (Keyboard.current.uKey.wasPressedThisFrame)
+        {
+            Undo();
+        }
         switch(_currentTool)
         {
             case Tool.Pen:
@@ -212,6 +220,12 @@ public class Marker : MonoBehaviour
                     _whiteboard.drawTexture.Apply();
                 }
 
+                if(!_touchedLastFrame)
+                {
+                    var wbState = new WhiteboardState(_whiteboard, _whiteboard.drawTexture);
+                    _wbStateStack.Push(wbState);
+                }
+
                 _lastTouchPos = new Vector2(x, y);
                 _lastTouchRot = transform.rotation;
                 _touchedLastFrame = true;
@@ -290,6 +304,12 @@ public class Marker : MonoBehaviour
                     _whiteboard.drawTexture.Apply();
                 }
 
+                if (!_touchedLastFrame)
+                {
+                    var wbState = new WhiteboardState(_whiteboard, _whiteboard.drawTexture);
+                    _wbStateStack.Push(wbState);
+                }
+
                 _lastTouchPos = new Vector2(x, y);
                 _lastTouchRot = transform.rotation;
                 _touchedLastFrame = true;
@@ -351,6 +371,20 @@ public class Marker : MonoBehaviour
         }
     }
 
+    private void Undo()
+    {
+        var prevState = _wbStateStack.Pop();
+        if (prevState == null)
+        {
+            Debug.Log("Twas Null");
+            return;
+        }
+
+        Graphics.CopyTexture(prevState.texture, prevState.wb.drawTexture);
+        prevState.wb.drawTexture.Apply();
+        prevState = null;
+    }
+
     /**
      * Functions for the RGB sliders
      */
@@ -368,6 +402,31 @@ public class Marker : MonoBehaviour
     {
         ChangeTool(Tool.ColorPicker);
     }
+
+    private class WhiteboardState
+    {
+        public Whiteboard wb { get; }
+        public Texture2D texture { get; }
+
+        public WhiteboardState(Whiteboard whb)
+        {
+            wb = whb;
+            texture = new Texture2D(whb.drawTexture.width, whb.drawTexture.height);
+            Graphics.CopyTexture(whb.drawTexture, texture);
+            texture.Apply();
+        }
+
+        public WhiteboardState(Whiteboard whb, Texture2D tex)
+        {
+            wb = whb;
+            texture = new Texture2D(tex.width, tex.height);
+            Graphics.CopyTexture(tex, texture);
+            texture.Apply();
+        }
+
+    }
+
+    
 }
 
 
