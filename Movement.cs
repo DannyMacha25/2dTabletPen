@@ -30,6 +30,11 @@ public class Movement : MonoBehaviour
     {
         // NOTE: Current movement is frame based, might become a problem?
         // Movement
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            return;
+        }
+
         if (Input.GetKey(forward))
         {
             tf.position += tf.forward * speed;

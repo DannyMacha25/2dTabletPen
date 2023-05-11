@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class Draggable : MonoBehaviour
 {
-    public KeyCode activationKey = KeyCode.LeftControl;
+    [SerializeField] KeyCode activationKey = KeyCode.LeftControl;
+    [SerializeField] KeyCode deletionKey = KeyCode.X;
+
+    [SerializeField] KeyCode rotLeft = KeyCode.LeftArrow;
+    [SerializeField] KeyCode rotRight = KeyCode.RightArrow;
+    [SerializeField] KeyCode panUp = KeyCode.UpArrow;
+    [SerializeField] KeyCode panDown = KeyCode.DownArrow;
+
+    [SerializeField] float speed = .50f;
 
     private Vector3 mOffset;
     private float mZCoord;
@@ -27,5 +35,27 @@ public class Draggable : MonoBehaviour
         {
             transform.position = GetMouseWorldPos() + mOffset;
         }
+    }
+
+    private void OnMouseOver()
+    {
+        if (!Input.GetKey(activationKey)) { return; }
+
+        if (Input.GetKey(deletionKey))
+        {
+            Destroy(this.gameObject);
+        }   
+
+        if (Input.GetKey(rotLeft))
+        {
+            this.transform.Rotate(-Vector3.up * speed);
+        }
+
+        if (Input.GetKey(rotRight))
+        {
+            this.transform.Rotate(Vector3.up * speed);
+        }
+
+
     }
 }

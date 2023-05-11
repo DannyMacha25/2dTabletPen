@@ -24,4 +24,9 @@ on the object. Then place the *Whiteboard* tag on the object. The object is now 
 - U to undo
 
 ## Panels
-Drawable panels can be spawned with the f key. Once a panel is spawned, holding the left control allows you to drag the panel.
+Drawable panels can be spawned with the f key. Once a panel is spawned, holding the left control allows you to interact with the panel. The following commands require the left control key to be held
+
+- X to delete the panel
+- Left/right to rotate the panel
+- Mouse/Pen to move the panel
+
