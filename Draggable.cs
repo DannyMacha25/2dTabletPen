@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 public class Draggable : MonoBehaviour
 {
@@ -29,12 +31,20 @@ public class Draggable : MonoBehaviour
 
         return Camera.main.ScreenToWorldPoint(mousePoint);
     }
-    private void OnMouseDrag()
+    private void OnMouseDrag() // Must make work for pen too
     {
         if (Input.GetKey(activationKey)) 
         {
             transform.position = GetMouseWorldPos() + mOffset;
         }
+    }
+
+    private void Update()
+    {
+        if (Pen.current.tip.isPressed) // Not fully functional
+        {
+            transform.position = GetMouseWorldPos() + mOffset;
+        } 
     }
 
     private void OnMouseOver()

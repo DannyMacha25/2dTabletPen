@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -42,7 +42,7 @@ public class Whiteboard : MonoBehaviour
         Material m = new Material(transparentMaterial);
         materials.Add(m);
         materials.Add(r.material);
-        r.SetMaterials(materials);
+        r.materials = materials.ToArray();
     }
 
 

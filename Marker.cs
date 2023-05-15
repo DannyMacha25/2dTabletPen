@@ -290,7 +290,8 @@ public class Marker : MonoBehaviour
                 if (_touchedLastFrame)
                 {
                     Color[] blankColors = new Color[_eraserSize * _eraserSize];
-                    Array.Fill<Color>(blankColors, new Color(0, 0, 0, 0));
+                    //Array.Fill<Color>(blankColors, new Color(0, 0, 0, 0)); //.NET 2.1
+                    FillArray<Color>(blankColors, new Color(0, 0, 0, 0)); //not .NET 2.1
                     _whiteboard.drawTexture.SetPixels(x, y, _eraserSize, _eraserSize, blankColors);
 
                     for (float f = 0.01f; f < 1.00f; f += 0.01f)
@@ -404,6 +405,14 @@ public class Marker : MonoBehaviour
     public void ChangeToColorPicker()
     {
         ChangeTool(Tool.ColorPicker);
+    }
+
+    private void FillArray<T>(T[] arr, T element)
+    {
+        for(int i = 0; i < arr.Length; i++)
+        {
+            arr[i] = element;
+        }
     }
 
     private class WhiteboardState
