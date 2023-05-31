@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+//using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -22,8 +22,8 @@ public class Whiteboard : MonoBehaviour
             texture = new Texture2D((int)textureSize.x, (int)textureSize.y);
         }
 
-        //drawTexture = new Texture2D((int)textureSize.x, (int)textureSize.y); // Again may need to modify this for other textures
-        drawTexture = new Texture2D((int)texture.Size().x, (int)texture.Size().x); // Again may need to modify this for other textures
+        drawTexture = new Texture2D((int)textureSize.x, (int)textureSize.y); // Again may need to modify this for other textures
+        //drawTexture = new Texture2D((int)texture.Size().x, (int)texture.Size().x); // Again may need to modify this for other textures
         Color[] transparentPixels = new Color[drawTexture.width * drawTexture.height];
 
         for (int i = 0; i < transparentPixels.Length; i++)

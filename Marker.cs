@@ -188,6 +188,7 @@ public class Marker : MonoBehaviour
 
         if (Physics.Raycast(worldPos, Vector3.forward, out _touch, 10f) && worldPos != Vector3.zero)
         {
+            Debug.Log(_touch.textureCoord.x + " " + _touch.textureCoord.y);
 
             if (_touch.transform.CompareTag("Whiteboard"))
             {
