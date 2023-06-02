@@ -10,6 +10,8 @@ public class Whiteboard : MonoBehaviour
     public Texture2D texture;
     public Texture2D drawTexture;
 
+    public bool showDrawTexutre;
+
     [SerializeField] Material transparentMaterial; 
     public Vector2 textureSize = new Vector2(2048, 2048);
     void Start()
@@ -46,5 +48,11 @@ public class Whiteboard : MonoBehaviour
         r.materials = materials.ToArray();
     }
 
-
+    private void OnGUI()
+    {
+        if (showDrawTexutre)
+        {
+            GUI.DrawTexture(new Rect(0, 500, 256, 256), drawTexture, ScaleMode.ScaleToFit, false, 1);
+        }
+    }
 }

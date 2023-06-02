@@ -28,6 +28,7 @@ public class ShaderMarker : MonoBehaviour
             if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out _hit))
             {
                 _drawMaterial.SetVector("_Coordinate", new Vector4(_hit.textureCoord.x, _hit.textureCoord.y, 0, 0));
+                Debug.Log(_hit.textureCoord.x + " " + _hit.textureCoord.y);
                 RenderTexture temp = RenderTexture.GetTemporary(_splatmap.width, _splatmap.height, 0, RenderTextureFormat.ARGBFloat);
                 Graphics.Blit(_splatmap, temp);
                 Graphics.Blit(temp, _splatmap, _drawMaterial);
@@ -38,6 +39,6 @@ public class ShaderMarker : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.DrawTexture(new Rect(0, 0, 256, 256), _splatmap, ScaleMode.ScaleToFit, false, 1);
+        //GUI.DrawTexture(new Rect(0, 0, 256, 256), _splatmap, ScaleMode.ScaleToFit, false, 1);
     }
 }

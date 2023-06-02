@@ -182,13 +182,15 @@ public class Marker : MonoBehaviour
         }
         if (worldPos != Vector3.zero)
         {
+            
             worldPos.z -= .1f;
-            Debug.DrawRay(worldPos, Vector3.forward, Color.green, 100f);
+            Debug.DrawRay(worldPos, Vector3.forward, Color.green, 10f);
+            Debug.Log(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition)));
         }
 
-        if (Physics.Raycast(worldPos, Vector3.forward, out _touch, 10f) && worldPos != Vector3.zero)
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _touch) && worldPos != Vector3.zero)
         {
-            Debug.Log(_touch.textureCoord.x + " " + _touch.textureCoord.y);
+            Debug.Log("Touched");
 
             if (_touch.transform.CompareTag("Whiteboard"))
             {
@@ -204,9 +206,12 @@ public class Marker : MonoBehaviour
 
                 if (y < 0 || y > _whiteboard.textureSize.y || x < 0 || x > _whiteboard.textureSize.x)
                 {
-                    return;
+                    Debug.Log("AHHHHHHHH!: " + x + ", " + y);
+                    x = (int)((_touchPos.x * _whiteboard.textureSize.x - (_penSize / 2)) % _whiteboard.textureSize.x);
+                    y = (int)((_touchPos.y * _whiteboard.textureSize.y - (_penSize / 2)) % _whiteboard.textureSize.y);
+                    //return;
                 }
-
+                Debug.Log("AHHHHHHHH! But Not :3 : " + x + ", " + y);
                 if (_touchedLastFrame)
                 {
                     _whiteboard.drawTexture.SetPixels(x, y, _penSize, _penSize, _colors);
@@ -216,10 +221,10 @@ public class Marker : MonoBehaviour
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
 
                         // Set pixels
-                        _whiteboard.drawTexture.SetPixels(lerpX, lerpY, _penSize, _penSize, _colors);
+                        Debug.Log("Pixels Set: " + lerpX + ", " + lerpY);
+                        //Debug.Log("Pixels Set: " + _touchPos.x + ", " + _touchPos);
+                        _whiteboard.drawTexture.SetPixels((int)lerpX, (int)lerpY, _penSize, _penSize, _colors);
                     }
-
-                    //transform.rotation = _lastTouchRot;
 
                     _whiteboard.drawTexture.Apply();
                 }
