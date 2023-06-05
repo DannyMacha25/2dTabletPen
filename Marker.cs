@@ -202,15 +202,15 @@ public class Marker : MonoBehaviour
 
                 var x = (int)(_touchPos.x * _whiteboard.textureSize.x - (_penSize / 2));
                 var y = (int)(_touchPos.y * _whiteboard.textureSize.y - (_penSize / 2));
-
+                Debug.Log("Touch Pos: " + _touchPos.x + " " + _touchPos.y);
                 if (y < 0 || y > _whiteboard.textureSize.y || x < 0 || x > _whiteboard.textureSize.x)
                 {
-                    //Debug.Log("AHHHHHHHH!: " + x + ", " + y);
+                    Debug.Log("AHHHHHHHH!: " + x + ", " + y);
                     x = (int)((_touchPos.x * _whiteboard.textureSize.x - (_penSize / 2)) % _whiteboard.textureSize.x);
                     y = (int)((_touchPos.y * _whiteboard.textureSize.y - (_penSize / 2)) % _whiteboard.textureSize.y);
                     //return;
                 }
-                //Debug.Log("AHHHHHHHH! But Not :3 : " + x + ", " + y);
+                Debug.Log("AHHHHHHHH! But Not :3 : " + x + ", " + y);
                 if (_touchedLastFrame)
                 {
                     _whiteboard.drawTexture.SetPixels(x, y, _penSize, _penSize, _colors);
@@ -220,8 +220,8 @@ public class Marker : MonoBehaviour
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
 
                         // Set pixels
-                        //Debug.Log("Pixels Set: " + lerpX + ", " + lerpY);
-                        //Debug.Log("Pixels Set: " + _touchPos.x + ", " + _touchPos);
+                        Debug.Log("Pixels Set: (lerp) " + lerpX + ", " + lerpY);
+                        Debug.Log("Pixels Set: " + _touchPos.x + ", " + _touchPos);
                         _whiteboard.drawTexture.SetPixels((int)lerpX, (int)lerpY, _penSize, _penSize, _colors);
                     }
 
