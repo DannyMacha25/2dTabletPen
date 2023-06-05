@@ -98,7 +98,6 @@ public class Marker : MonoBehaviour
             {
                 case Tool.Pen:
                     Draw(); break;
-
                 case Tool.Eraser:
                     Erase(); break;
                 case Tool.ColorPicker:
@@ -206,12 +205,12 @@ public class Marker : MonoBehaviour
 
                 if (y < 0 || y > _whiteboard.textureSize.y || x < 0 || x > _whiteboard.textureSize.x)
                 {
-                    Debug.Log("AHHHHHHHH!: " + x + ", " + y);
+                    //Debug.Log("AHHHHHHHH!: " + x + ", " + y);
                     x = (int)((_touchPos.x * _whiteboard.textureSize.x - (_penSize / 2)) % _whiteboard.textureSize.x);
                     y = (int)((_touchPos.y * _whiteboard.textureSize.y - (_penSize / 2)) % _whiteboard.textureSize.y);
                     //return;
                 }
-                Debug.Log("AHHHHHHHH! But Not :3 : " + x + ", " + y);
+                //Debug.Log("AHHHHHHHH! But Not :3 : " + x + ", " + y);
                 if (_touchedLastFrame)
                 {
                     _whiteboard.drawTexture.SetPixels(x, y, _penSize, _penSize, _colors);
@@ -221,7 +220,7 @@ public class Marker : MonoBehaviour
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
 
                         // Set pixels
-                        Debug.Log("Pixels Set: " + lerpX + ", " + lerpY);
+                        //Debug.Log("Pixels Set: " + lerpX + ", " + lerpY);
                         //Debug.Log("Pixels Set: " + _touchPos.x + ", " + _touchPos);
                         _whiteboard.drawTexture.SetPixels((int)lerpX, (int)lerpY, _penSize, _penSize, _colors);
                     }
@@ -273,11 +272,12 @@ public class Marker : MonoBehaviour
             Debug.DrawRay(worldPos, Vector3.forward, Color.green, 100f);
         }
 
-        if (Physics.Raycast(worldPos, Vector3.forward, out _touch, 10f) && worldPos != Vector3.zero)
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _touch) && worldPos != Vector3.zero)
         {
 
             if (_touch.transform.CompareTag("Whiteboard"))
             {
+                Debug.Log("Dow");
                 if (_whiteboard == null)
                 {
                     _whiteboard = _touch.transform.GetComponent<Whiteboard>();
@@ -290,7 +290,10 @@ public class Marker : MonoBehaviour
 
                 if (y < 0 || y > _whiteboard.textureSize.y || x < 0 || x > _whiteboard.textureSize.x)
                 {
-                    return;
+                    Debug.Log("AHHHHHHHH!: " + x + ", " + y);
+                    x = (int)((_touchPos.x * _whiteboard.textureSize.x - (_penSize / 2)) % _whiteboard.textureSize.x);
+                    y = (int)((_touchPos.y * _whiteboard.textureSize.y - (_penSize / 2)) % _whiteboard.textureSize.y);
+                    //return;
                 }
 
                 if (_touchedLastFrame)
@@ -331,7 +334,7 @@ public class Marker : MonoBehaviour
         _touchedLastFrame = false;
     }
 
-    // Color Picker
+    // Color Picker NOTE: Needs some positional work
     private void PickColor()
     {
         Vector3 pos = new Vector3(0, 0, 0);
@@ -368,13 +371,16 @@ public class Marker : MonoBehaviour
                 var x = (int)(_touchPos.x * wb.textureSize.x - (_penSize / 2));
                 var y = (int)(_touchPos.y * wb.textureSize.y - (_penSize / 2));
 
-                if (y < 0 || y > wb.textureSize.y || x < 0 || x > wb.textureSize.x)
+                if (y < 0 || y > _whiteboard.textureSize.y || x < 0 || x > _whiteboard.textureSize.x)
                 {
-                    return;
+                    //Debug.Log("AHHHHHHHH!: " + x + ", " + y);
+                    x = (int)((_touchPos.x * _whiteboard.textureSize.x - (_penSize / 2)) % _whiteboard.textureSize.x);
+                    y = (int)((_touchPos.y * _whiteboard.textureSize.y - (_penSize / 2)) % _whiteboard.textureSize.y);
+                    //return;
                 }
 
                 var color = wb.drawTexture.GetPixel(x, y);
-
+                Debug.Log(color.ToString());
                 ChangeColor(color);
                 _colorInput.UpdateColor(color);
             }
