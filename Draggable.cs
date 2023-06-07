@@ -56,6 +56,7 @@ public class Draggable : MonoBehaviour
             Destroy(this.gameObject);
         }   
 
+        // Rotation
         if (Input.GetKey(rotLeft))
         {
             this.transform.Rotate(-Vector3.up * speed);
@@ -66,6 +67,17 @@ public class Draggable : MonoBehaviour
             this.transform.Rotate(Vector3.up * speed);
         }
 
+        // Scale
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            var scale = this.transform.localScale;
+            this.transform.localScale = new Vector3(scale.x + .05f, scale.y, scale.z);
+        }
 
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            var scale = this.transform.localScale;
+            this.transform.localScale = new Vector3(scale.x - .05f, scale.y, scale.z);
+        }
     }
 }
