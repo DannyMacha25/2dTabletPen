@@ -189,7 +189,7 @@ public class Marker : MonoBehaviour
 
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _touch) && worldPos != Vector3.zero)
         {
-            Debug.Log("Touched");
+            //Debug.Log("Touched");
 
             if (_touch.transform.CompareTag("Whiteboard"))
             {
@@ -202,7 +202,7 @@ public class Marker : MonoBehaviour
 
                 var x = (int)(_touchPos.x * _whiteboard.textureSize.x - (_penSize / 2));
                 var y = (int)(_touchPos.y * _whiteboard.textureSize.y - (_penSize / 2));
-                Debug.Log("Touch Pos: " + _touchPos.x + " " + _touchPos.y);
+                //Debug.Log("Touch Pos: " + _touchPos.x + " " + _touchPos.y);
                 if (y < 0 || y > _whiteboard.textureSize.y || x < 0 || x > _whiteboard.textureSize.x)
                 {
                     Debug.Log("AHHHHHHHH!: " + x + ", " + y);
@@ -220,8 +220,8 @@ public class Marker : MonoBehaviour
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
 
                         // Set pixels
-                        Debug.Log("Pixels Set: (lerp) " + lerpX + ", " + lerpY);
-                        Debug.Log("Pixels Set: " + _touchPos.x + ", " + _touchPos);
+                        //Debug.Log("Pixels Set: (lerp) " + lerpX + ", " + lerpY);
+                        //Debug.Log("Pixels Set: " + _touchPos.x + ", " + _touchPos);
                         _whiteboard.drawTexture.SetPixels((int)lerpX, (int)lerpY, _penSize, _penSize, _colors);
                     }
 
@@ -361,7 +361,7 @@ public class Marker : MonoBehaviour
             Debug.DrawRay(worldPos, Vector3.forward, Color.green, 100f);
         }
 
-        if (Physics.Raycast(worldPos, Vector3.forward, out _touch, 10f) && worldPos != Vector3.zero)
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out _touch) && worldPos != Vector3.zero)
         {
             if (_touch.transform.CompareTag("Whiteboard"))
             {
