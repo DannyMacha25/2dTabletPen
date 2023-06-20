@@ -224,9 +224,12 @@ public class Marker : MonoBehaviour
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
 
                         // Set pixels
-                        //Debug.Log("Pixels Set: (lerp) " + lerpX + ", " + lerpY);
+                        Debug.Log("Pixels Set: (lerp) " + lerpX + ", " + lerpY);
                         //Debug.Log("Pixels Set: " + _touchPos.x + ", " + _touchPos);
-                        _whiteboard.drawTexture.SetPixels((int)lerpX, (int)lerpY, _penSize, _penSize, _colors);
+                        if (!(lerpX + _penSize >= _whiteboard.textureSize.x) && !(lerpX + _penSize >= _whiteboard.textureSize.y))
+                        {
+                            _whiteboard.drawTexture.SetPixels((int)lerpX, (int)lerpY, _penSize, _penSize, _colors);
+                        }
                     }
 
                     if(_framesPassedSinceApply >= 2)
@@ -255,6 +258,7 @@ public class Marker : MonoBehaviour
         if (_whiteboard != null)
         {
             _whiteboard.drawTexture.Apply();
+            _framesPassedSinceApply = 0;
         }
         _whiteboard = null;
         _touchedLastFrame = false;
@@ -292,7 +296,6 @@ public class Marker : MonoBehaviour
 
             if (_touch.transform.CompareTag("Whiteboard"))
             {
-                Debug.Log("Dow");
                 if (_whiteboard == null)
                 {
                     _whiteboard = _touch.transform.GetComponent<Whiteboard>();
@@ -305,7 +308,6 @@ public class Marker : MonoBehaviour
 
                 if (y < 0 || y > _whiteboard.textureSize.y || x < 0 || x > _whiteboard.textureSize.x)
                 {
-                    Debug.Log("AHHHHHHHH!: " + x + ", " + y);
                     x = (int)((_touchPos.x * _whiteboard.textureSize.x - (_penSize / 2)) % _whiteboard.textureSize.x);
                     y = (int)((_touchPos.y * _whiteboard.textureSize.y - (_penSize / 2)) % _whiteboard.textureSize.y);
                     //return;
@@ -329,7 +331,15 @@ public class Marker : MonoBehaviour
 
                     //transform.rotation = _lastTouchRot;
 
-                    _whiteboard.drawTexture.Apply();
+                    if (_framesPassedSinceApply >= 2)
+                    {
+                        _whiteboard.drawTexture.Apply();
+                        _framesPassedSinceApply = 0;
+                    }
+                    else
+                    {
+                        _framesPassedSinceApply++;
+                    }
                 }
 
                 if (!_touchedLastFrame)
@@ -345,6 +355,11 @@ public class Marker : MonoBehaviour
             }
         }
 
+        if (_whiteboard != null)
+        {
+            _whiteboard.drawTexture.Apply();
+            _framesPassedSinceApply = 0;
+        }
         _whiteboard = null;
         _touchedLastFrame = false;
     }
