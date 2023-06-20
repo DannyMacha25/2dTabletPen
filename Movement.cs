@@ -21,7 +21,7 @@ public class Movement : MonoBehaviour
 
     KeyCode ascend = KeyCode.Space;
     KeyCode descend = KeyCode.LeftShift;
-    private const float MAX_X_ROTATION = 25f;
+    private const float MAX_X_ROTATION = 50f;
     private void Start()
     {
         tf = this.GetComponent<Transform>();
