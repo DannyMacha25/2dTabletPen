@@ -191,7 +191,7 @@ public class Marker : MonoBehaviour
             //Debug.Log(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition)));
         }
 
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Pen.current.position.ReadValue()), out _touch) && worldPos != Vector3.zero) // Use Input.mouseposition for mouse input
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Pointer.current.position.ReadValue()), out _touch) && worldPos != Vector3.zero) // Use Input.mouseposition for mouse input
         {
             //Debug.Log("Touched");
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 //using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -41,10 +42,10 @@ public class Whiteboard : MonoBehaviour
         r.material.mainTexture = texture;
         transparentMaterial.mainTexture = drawTexture;
 
-        List<Material> materials = new List<Material> ();
+        List<Material> materials = new List<Material>(r.materials);
         Material m = new Material(transparentMaterial);
-        materials.Add(m);
-        materials.Add(r.material);
+        materials.Insert(0, m);
+        //materials.Add(r.material);
         r.materials = materials.ToArray();
     }
 
