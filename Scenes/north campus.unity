@@ -259,7 +259,7 @@ MonoBehaviour:
   drawTexture: {fileID: 0}
   showDrawTexutre: 0
   transparentMaterial: {fileID: 2100000, guid: 8e5d59f29f264c44f897269e1bd4901f, type: 2}
-  textureSize: {x: 2000, y: 2000}
+  textureSize: {x: 3000, y: 3000}
 --- !u!64 &137904036
 MeshCollider:
   m_ObjectHideFlags: 0

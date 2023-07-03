@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TMPro;
 using System;
+using UnityEngine.EventSystems;
 
 public class Marker : MonoBehaviour
 {
@@ -27,8 +28,10 @@ public class Marker : MonoBehaviour
     [SerializeField] private RGBInput _colorInput;
     [SerializeField] bool _acceptMouseInput = false;
     [SerializeField] TextMeshProUGUI _sizeText;
+    [SerializeField] int _frameDelay = 2;
     // Be sure the panels are in order of PEN, ERASER, COLOR PICKER
     [SerializeField] GameObject[] _toolPanels;
+
 
     // Colors for UI
     private Color _toolSelectedColor = new Color(248 / 255f, 1f, 117 / 255f, 1f);
@@ -95,7 +98,7 @@ public class Marker : MonoBehaviour
         {
             Undo();
         }
-        if (!Keyboard.current.leftCtrlKey.isPressed)
+        if (!Keyboard.current.leftCtrlKey.isPressed && !EventSystem.current.IsPointerOverGameObject())
         {
             switch (_currentTool)
             {
@@ -164,19 +167,21 @@ public class Marker : MonoBehaviour
     // Pen
     private void Draw()
     {
-        Vector3 pos = new Vector3(0, 0, 0);
+        Vector3 pointerPosition;
+        if (_acceptMouseInput)
+        {
+            pointerPosition = Mouse.current.position.ReadValue();
+        }
+        else
+        {
+            pointerPosition = Pen.current.position.ReadValue();
+        }
         Vector3 worldPos = new Vector3(0, 0, 0);
         if (Pen.current.tip.isPressed || (_acceptMouseInput && Pointer.current.press.isPressed))
         {
-            //Debug.Log("ahhhh");
             RaycastHit hitData;
-            pos = Pen.current.position.ReadValue();
-            if (_acceptMouseInput)
-            {
-                pos = Pointer.current.position.ReadValue();
-            }
-            pos.z = 1;
-            var ray = Camera.main.ScreenPointToRay(pos);
+            pointerPosition.z = 1;
+            var ray = Camera.main.ScreenPointToRay(pointerPosition);
             if (Physics.Raycast(ray, out hitData, 1000))
             {
                 worldPos = hitData.point;
@@ -185,13 +190,11 @@ public class Marker : MonoBehaviour
         }
         if (worldPos != Vector3.zero)
         {
-            
             worldPos.z -= .1f;
-            //Debug.DrawRay(worldPos, Vector3.forward, Color.green, 10f);
-            //Debug.Log(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition)));
+            Debug.DrawRay(worldPos, Vector3.forward, Color.green, 100f);
         }
 
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Pointer.current.position.ReadValue()), out _touch) && worldPos != Vector3.zero) // Use Input.mouseposition for mouse input
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(pointerPosition), out _touch) && worldPos != Vector3.zero)
         {
             //Debug.Log("Touched");
 
@@ -232,7 +235,7 @@ public class Marker : MonoBehaviour
                         }
                     }
 
-                    if(_framesPassedSinceApply >= 2)
+                    if(_framesPassedSinceApply >= _frameDelay)
                     {
                         _whiteboard.drawTexture.Apply();
                         _framesPassedSinceApply = 0;
@@ -267,18 +270,20 @@ public class Marker : MonoBehaviour
     // Eraser
     private void Erase()
     {
-        Vector3 pos = new Vector3(0, 0, 0);
+        Vector3 pointerPosition;
+        if(_acceptMouseInput)
+        {
+            pointerPosition = Mouse.current.position.ReadValue();
+        }else
+        {
+            pointerPosition = Pen.current.position.ReadValue();
+        }
         Vector3 worldPos = new Vector3(0, 0, 0);
         if (Pen.current.tip.isPressed || (_acceptMouseInput && Pointer.current.press.isPressed))
         {
             RaycastHit hitData;
-            pos = Pen.current.position.ReadValue();
-            if (_acceptMouseInput)
-            {
-                pos = Pointer.current.position.ReadValue();
-            }
-            pos.z = 1;
-            var ray = Camera.main.ScreenPointToRay(pos);
+            pointerPosition.z = 1;
+            var ray = Camera.main.ScreenPointToRay(pointerPosition);
             if (Physics.Raycast(ray, out hitData, 1000))
             {
                 worldPos = hitData.point;
@@ -291,7 +296,7 @@ public class Marker : MonoBehaviour
             Debug.DrawRay(worldPos, Vector3.forward, Color.green, 100f);
         }
 
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Pen.current.position.ReadValue()), out _touch) && worldPos != Vector3.zero)
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(pointerPosition), out _touch) && worldPos != Vector3.zero)
         {
 
             if (_touch.transform.CompareTag("Whiteboard"))
@@ -329,9 +334,8 @@ public class Marker : MonoBehaviour
                         _whiteboard.drawTexture.SetPixels(lerpX, lerpY, _eraserSize, _eraserSize, blankColors);
                     }
 
-                    //transform.rotation = _lastTouchRot;
 
-                    if (_framesPassedSinceApply >= 2)
+                    if (_framesPassedSinceApply >= _frameDelay)
                     {
                         _whiteboard.drawTexture.Apply();
                         _framesPassedSinceApply = 0;
@@ -367,18 +371,21 @@ public class Marker : MonoBehaviour
     // Color Picker NOTE: Needs some positional work
     private void PickColor()
     {
-        Vector3 pos = new Vector3(0, 0, 0);
+        Vector3 pointerPosition;
+        if (_acceptMouseInput)
+        {
+            pointerPosition = Mouse.current.position.ReadValue();
+        }
+        else
+        {
+            pointerPosition = Pen.current.position.ReadValue();
+        }
         Vector3 worldPos = new Vector3(0, 0, 0);
         if (Pen.current.tip.isPressed || (_acceptMouseInput && Pointer.current.press.isPressed))
         {
             RaycastHit hitData;
-            pos = Pen.current.position.ReadValue();
-            if (_acceptMouseInput)
-            {
-                pos = Pointer.current.position.ReadValue();
-            }
-            pos.z = 1;
-            var ray = Camera.main.ScreenPointToRay(pos);
+            pointerPosition.z = 1;
+            var ray = Camera.main.ScreenPointToRay(pointerPosition);
             if (Physics.Raycast(ray, out hitData, 1000))
             {
                 worldPos = hitData.point;
@@ -391,7 +398,7 @@ public class Marker : MonoBehaviour
             Debug.DrawRay(worldPos, Vector3.forward, Color.green, 100f);
         }
 
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Pen.current.position.ReadValue()), out _touch) && worldPos != Vector3.zero)
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(pointerPosition), out _touch) && worldPos != Vector3.zero)
         {
             if (_touch.transform.CompareTag("Whiteboard"))
             {
