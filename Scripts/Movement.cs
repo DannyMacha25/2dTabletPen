@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
     [SerializeField] float speed, rotationSpeed;
+    [SerializeField] GameObject settingsMenu;
     Transform tf;
 
     // Modular Controls
@@ -91,6 +93,13 @@ public class Movement : MonoBehaviour
             tf.position -= tf.up * speed;
         }
 
+        // Menu
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            ToggleSettingsMenu();
+        }
+
     }
 
     // Thanks whydoidoit from 2014 https://answers.unity.com/questions/659932/how-do-i-clamp-my-rotation.html
@@ -140,5 +149,20 @@ public class Movement : MonoBehaviour
         if (!result)
             angle = max;
         return angle;
+    }
+
+    public void ChangeMovementSpeed(float s)
+    {
+        speed = s;
+    }
+
+    public void ChangeCameraSpeed(float s)
+    {
+        rotationSpeed = s;
+    }
+
+    public void ToggleSettingsMenu()
+    {
+        settingsMenu.SetActive(!settingsMenu.activeSelf);
     }
 }

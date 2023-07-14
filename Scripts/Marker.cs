@@ -227,7 +227,7 @@ public class Marker : MonoBehaviour
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
 
                         // Set pixels
-                        Debug.Log("Pixels Set: (lerp) " + lerpX + ", " + lerpY);
+                        //Debug.Log("Pixels Set: (lerp) " + lerpX + ", " + lerpY);
                         //Debug.Log("Pixels Set: " + _touchPos.x + ", " + _touchPos);
                         if (!(lerpX + _penSize >= _whiteboard.textureSize.x) && !(lerpX + _penSize >= _whiteboard.textureSize.y))
                         {
