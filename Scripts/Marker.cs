@@ -464,6 +464,16 @@ public class Marker : MonoBehaviour
         }
     }
 
+    public void ChangeWhiteboardStackCap(float f)
+    {
+        ChangeWhiteboardStackCap((int)f);
+    }
+    public void ChangeWhiteboardStackCap(int n)
+    {
+        _wbStateStack.ChangeCap(n);
+        Debug.Log("Stack changed to " + n);
+    }
+
     private class WhiteboardState
     {
         public Whiteboard wb { get; }

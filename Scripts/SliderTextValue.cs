@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class SliderTextValue : MonoBehaviour
 {
-    private float _value;
     private TextMeshProUGUI _textMesh;
     void Start()
     {
@@ -16,12 +15,26 @@ public class SliderTextValue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _textMesh.text = (_value * 10).ToString("0.00");
     }
 
     public void ChangeValue(float value)
     {
-        _value = value;
+        _textMesh.text = (value * 10).ToString("0.00");
+    }
+
+    public void ChangeText(string s)
+    {
+        _textMesh.text = s;
+    }
+
+    public void ChangeText(int n)
+    {
+        _textMesh.text = n.ToString();
+    }
+
+    public void ChangeTextFromSliderToInt(float f)
+    {
+        ChangeText((int)f);
     }
 
 

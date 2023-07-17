@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -40,6 +41,24 @@ public class CappedStack<T>
         }
 
         return default(T);
+    }
+
+    public void ChangeCap(int n)
+    {
+        if (n <= 0)
+        {
+            return; // Should probably throw an exception lmao :3
+        }
+
+        if (n < cap)
+        {
+            if (elements.Count > n)
+            {
+                elements.RemoveRange(n, elements.Count - 1);
+            }
+        }
+
+        cap = n;
     }
 
 }
