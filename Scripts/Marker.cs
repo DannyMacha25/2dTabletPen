@@ -32,6 +32,8 @@ public class Marker : MonoBehaviour
     // Be sure the panels are in order of PEN, ERASER, COLOR PICKER
     [SerializeField] GameObject[] _toolPanels;
 
+    [Header("Debug")]
+    public float distanceFlag = 100f;
 
     // Colors for UI
     private Color _toolSelectedColor = new Color(248 / 255f, 1f, 117 / 255f, 1f);
@@ -65,7 +67,6 @@ public class Marker : MonoBehaviour
 
     void Update()
     {
-        Vector3 pos = new Vector3(0, 0, 0);
         ChangeColor(_colorInput.Color());
 
         // Pen size
@@ -221,13 +222,18 @@ public class Marker : MonoBehaviour
                 if (_touchedLastFrame)
                 {
                     _whiteboard.drawTexture.SetPixels(x, y, _penSize, _penSize, _colors);
+                    if(Math.Abs(_touchPos.x - _lastTouchPos.x) > distanceFlag)
+                    {
+                        _whiteboard.drawTexture.Apply();
+                        return;
+                    }
                     for (float f = 0.01f; f < 1.00f; f += .01f)
                     {
                         var lerpX = (int)Mathf.Lerp(_lastTouchPos.x, x, f);
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
 
                         // Set pixels
-                        //Debug.Log("Pixels Set: (lerp) " + lerpX + ", " + lerpY);
+                        Debug.Log("Pixels Set: (lerp) " + lerpX + ", " + lerpY);
                         //Debug.Log("Pixels Set: " + _touchPos.x + ", " + _touchPos);
                         if (!(lerpX + _penSize >= _whiteboard.textureSize.x) && !(lerpX + _penSize >= _whiteboard.textureSize.y))
                         {
