@@ -165,7 +165,8 @@ public class Marker : MonoBehaviour
                 break;
         }
     }
-    // Pen
+    // Pen - TODO: Make the function take a coordinate so that a higher level can call and the same function can be accessed by different control
+    //  schemes - Danny
     private void Draw()
     {
         Vector3 pointerPosition;
@@ -210,15 +211,11 @@ public class Marker : MonoBehaviour
 
                 var x = (int)(_touchPos.x * _whiteboard.textureSize.x - (_penSize / 2));
                 var y = (int)(_touchPos.y * _whiteboard.textureSize.y - (_penSize / 2));
-                //Debug.Log("Touch Pos: " + _touchPos.x + " " + _touchPos.y);
                 if (y < 0 || y > _whiteboard.textureSize.y || x < 0 || x > _whiteboard.textureSize.x)
                 {
-                    //Debug.Log("AHHHHHHHH!: " + x + ", " + y);
                     x = (int)((_touchPos.x * _whiteboard.textureSize.x - (_penSize / 2)) % _whiteboard.textureSize.x);
                     y = (int)((_touchPos.y * _whiteboard.textureSize.y - (_penSize / 2)) % _whiteboard.textureSize.y);
-                    //return;
                 }
-                //Debug.Log("AHHHHHHHH! But Not :3 : " + x + ", " + y);
                 if (_touchedLastFrame)
                 {
                     _whiteboard.drawTexture.SetPixels(x, y, _penSize, _penSize, _colors);
@@ -273,7 +270,8 @@ public class Marker : MonoBehaviour
         _touchedLastFrame = false;
     }
 
-    // Eraser
+    // Eraser TODO: Make the function take a coordinate so that a higher level can call and the same function can be accessed by different control
+    //  schemes - Danny
     private void Erase()
     {
         Vector3 pointerPosition;
@@ -374,7 +372,8 @@ public class Marker : MonoBehaviour
         _touchedLastFrame = false;
     }
 
-    // Color Picker NOTE: Needs some positional work
+    // Color Picker TODO: Make the function take a coordinate so that a higher level can call and the same function can be accessed by different control
+    //  schemes - Danny
     private void PickColor()
     {
         Vector3 pointerPosition;
