@@ -13,7 +13,7 @@ public class Whiteboard : MonoBehaviour
 
     public bool showDrawTexutre;
 
-    [SerializeField] Material transparentMaterial; 
+    [SerializeField] public Material transparentMaterial; 
     public Vector2 textureSize = new Vector2(2048, 2048);
     void Start()
     {
@@ -40,6 +40,7 @@ public class Whiteboard : MonoBehaviour
 
         // Set textures and materials
         r.material.mainTexture = texture;
+
         transparentMaterial.mainTexture = drawTexture;
 
         List<Material> materials = new List<Material>(r.materials);
